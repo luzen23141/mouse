@@ -1,35 +1,38 @@
-資料夾結構
+Mouse
 ================
 
-# cmd目錄
-    main啟動指令，每個不同的啟動指令放在不同資料夾中
+# 指令
 
-# pkg 目錄
-    pkg 主要的程式碼目錄
+## 啟動api伺服器
 
-## pkg/blockchain 目錄
-    區塊鏈相關程式碼，用interface 來定義各種區塊鏈的接口，區塊鏈跟系統整合起來的地方
-### pkg/blockchain/third 目錄
-    實作呼叫鏈上api
+```bash
+./mouse api 
+```
 
-## pkg/const 目錄
-    系統相關的常量定義
+## 產地址
 
-## pkg/lib 目錄
-    將常用的功能封裝起來，會是最底層，不相依專案中的其他package (包含其他lib)
+```bash
+# ./mouse gen {?鏈}
+./mouse gen eth
+```
 
-## pkg/config 目錄
-    定義config 設定的內容，只能相依lib
+#### 產生指定後綴的地址
 
-## pkg/helper 目錄
-    綜合的使用lib config const目錄，封裝為共用func
+```bash
+# ./mouse gen {鏈} {?後綴}
+./mouse gen sol abcd 
+```
 
-## pkg/service 目錄
-    由ctl呼叫
+#### 指定多個執行緒
 
-## pkg/repo 目錄
-    使用model操作資料
+```bash
+# ./mouse gen {鏈} {?後綴} -c {執行緒數}
+./mouse gen tron abcd -c 10
+```
 
-## pkg/model 目錄
-    定義model結構
+#### 返回地址的私鑰(私鑰 非hd wallet) (預設為hd wallet的助記詞)
 
+```bash
+# ./mouse gen {鏈} {?後綴} --priv
+./mouse gen sol --priv
+```
