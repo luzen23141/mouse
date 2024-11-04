@@ -3,6 +3,9 @@ package chain
 import (
 	"crypto/ecdsa"
 	"encoding/hex"
+	"github.com/rotisserie/eris"
+	"github.com/shopspring/decimal"
+	"mouse/pkg/blockchain/model"
 	"mouse/pkg/lib/cyptolib"
 
 	"github.com/btcsuite/btcd/btcutil/bech32"
@@ -61,4 +64,8 @@ func (s *InjChain) GenHdAddr() (string, string, error) {
 	}
 
 	return address, mnemonic, nil
+}
+
+func (s *InjChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
+	return decimal.Zero, eris.New("not support")
 }

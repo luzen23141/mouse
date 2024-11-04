@@ -1,12 +1,12 @@
 package blockchain
 
 const (
-	BtcChain = "btc"
-	TrxChain = "trx"
-	SuiChain = "sui"
-	InjChain = "inj"
-	TonChain = "ton"
-	SolChain = "sol"
+	BtcChain  = "btc"
+	TronChain = "tron"
+	SuiChain  = "sui"
+	InjChain  = "inj"
+	TonChain  = "ton"
+	SolChain  = "sol"
 )
 
 // evm的鏈

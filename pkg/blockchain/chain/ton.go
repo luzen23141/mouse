@@ -4,8 +4,11 @@ import (
 	"crypto/ed25519"
 	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/rotisserie/eris"
+	"github.com/shopspring/decimal"
 	"github.com/tyler-smith/go-bip39"
 	"github.com/xssnick/tonutils-go/ton/wallet"
+	"mouse/pkg/blockchain/model"
 	cryptolib "mouse/pkg/lib/cyptolib"
 )
 
@@ -91,4 +94,8 @@ func (s *TonChain) GenHdAddr() (string, string, error) {
 
 	// Bounce(false) => UQ 開頭，Bounce(true) => EQ 開頭
 	return address.Bounce(false).String(), mnemonic, nil
+}
+
+func (s *TonChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
+	return decimal.Zero, eris.New("not support")
 }

@@ -3,6 +3,8 @@ package chain
 import (
 	"crypto/ed25519"
 	"encoding/hex"
+	"github.com/shopspring/decimal"
+	"mouse/pkg/blockchain/model"
 	"mouse/pkg/lib/cyptolib"
 
 	"github.com/block-vision/sui-go-sdk/common/keypair"
@@ -48,4 +50,8 @@ func (s *SuiChain) GenHdAddr() (string, string, error) {
 	}
 
 	return suiSigner.Address, mnemonic, nil
+}
+
+func (s *SuiChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
+	return decimal.Zero, eris.New("not support")
 }

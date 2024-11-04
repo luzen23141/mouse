@@ -4,6 +4,9 @@ import (
 	"crypto/ecdsa"
 	"crypto/sha256"
 	"encoding/hex"
+	"github.com/rotisserie/eris"
+	"github.com/shopspring/decimal"
+	"mouse/pkg/blockchain/model"
 	"mouse/pkg/lib/cyptolib"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -45,6 +48,10 @@ func (s *TronChain) GenHdAddr() (string, string, error) {
 	}
 
 	return addrConvEthToTron(crypto.PubkeyToAddress(*publicKeyECDSA).Hex()), mnemonic, nil
+}
+
+func (s *TronChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
+	return decimal.Zero, eris.New("not support")
 }
 
 func addrConvEthToTron(addr string) string {

@@ -25,6 +25,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	apiCmdInit(rootCmd)
 	genAddrCmdInit(rootCmd)
+	getBalanceCmdInit(rootCmd)
 
 	rootCmd.SetVersionTemplate(`{{printf "%s，%s\n" .Long .Version}}`)
 

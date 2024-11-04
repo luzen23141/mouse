@@ -2,6 +2,9 @@ package chain
 
 import (
 	"crypto/ed25519"
+	"github.com/rotisserie/eris"
+	"github.com/shopspring/decimal"
+	"mouse/pkg/blockchain/model"
 	"mouse/pkg/lib/cyptolib"
 
 	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
@@ -45,4 +48,8 @@ func (s *SolChain) GenHdAddr() (string, string, error) {
 	}
 
 	return account.PublicKey.ToBase58(), mnemonic, nil
+}
+
+func (s *SolChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
+	return decimal.Zero, eris.New("not support")
 }

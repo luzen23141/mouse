@@ -1,10 +1,14 @@
 package blockchain
 
-import "mouse/pkg/blockchain/chain"
+import (
+	"github.com/shopspring/decimal"
+	"mouse/pkg/blockchain/chain"
+	"mouse/pkg/blockchain/model"
+)
 
 var ChainMap = map[string]ChainInterface{
 	BtcChain:     chain.NewBtcChain(),
-	TrxChain:     chain.NewTronChain(),
+	TronChain:    chain.NewTronChain(),
 	EthChain:     chain.NewEvmChain(),
 	BscChain:     chain.NewEvmChain(),
 	PolygonChain: chain.NewEvmChain(),
@@ -20,4 +24,5 @@ var ChainMap = map[string]ChainInterface{
 type ChainInterface interface {
 	GenAddr() (string, string, error)
 	GenHdAddr() (string, string, error)
+	GetAddrBalance(string, model.CurrencyContract) (decimal.Decimal, error)
 }
