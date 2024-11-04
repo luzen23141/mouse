@@ -1,0 +1,48 @@
+issues:
+  exclude-dirs:
+    - tmp
+#  exclude-files:
+#    - pkg/blockchain/crypto_helper.go
+  exclude-rules:
+    - path: pkg/lib
+      linters:
+        - unused
+#  exclude-rules:
+#    - path: contrib
+#      linters:
+#        - unused
+linters:
+  disable-all: true
+  enable:
+    - errcheck # 预设 uber
+    - gosimple # 预设
+    - govet # 预设 uber
+    - ineffassign # 预设
+    - staticcheck # 预设 uber
+    - unused # 预设
+    - goimports # uber
+    - gofumpt # 同go fmt加强版
+    - whitespace # 检查多馀的空格
+    - bodyclose # 检查http连缐有没有关闭
+    - perfsprint # 檢查 fmt.Sprintf 用法
+    - sqlclosecheck # 檢查 sql 資料庫關閉
+#    - dupl # 重复程式码
+#    - unparam # 检查func传入及返回有没有没用到的
+linters-settings:
+  #  goimports:
+  #    # A comma-separated list of prefixes, which, if set, checks import paths
+  #    # with the given prefixes are grouped after 3rd-party packages.
+  #    # Default: ""
+  #    local-prefixes: "sports,sg"
+  dupl:
+    # Tokens count to trigger issue.
+    # Default: 150
+    threshold: 50
+  whitespace:
+    # Enforces newlines (or comments) after every multi-line if statement.
+    # Default: false
+    multi-if: false
+    # Enforces newlines (or comments) after every multi-line function signature.
+    # Default: false
+    multi-func: false
+
