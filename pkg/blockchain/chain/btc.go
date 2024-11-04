@@ -1,7 +1,7 @@
 package chain
 
 import (
-	"errors"
+	cryptolib "mouse/pkg/lib/cyptolib"
 
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcec/v2/schnorr"
@@ -12,11 +12,19 @@ import (
 
 type BtcChain struct {
 	netParams *chaincfg.Params
+	addrType  string
+}
+
+const _btcAddrLegacy = "legacy"
+
+var _btcAddrTypePath = map[string]string{
+	_btcAddrLegacy: "m/44'/0'/0'/0/0",
 }
 
 func NewBtcChain() *BtcChain {
 	return &BtcChain{
 		netParams: &chaincfg.MainNetParams,
+		addrType:  _btcAddrLegacy,
 	}
 }
 
@@ -45,6 +53,25 @@ func (s *BtcChain) GenAddr() (string, string, error) {
 	return taprootAddr.EncodeAddress(), wif.String(), nil
 }
 
-func (s *BtcChain) GenHdAddr() (addr, mnemonic string, err error) {
-	return "", "", errors.New("not support")
+func (s *BtcChain) GenHdAddr() (string, string, error) {
+	mnemonic, _, err := cryptolib.NewMnemonic()
+	if err != nil {
+		return "", "", err
+	}
+	//mnemonic := "outside harbor seed crumble ginger broccoli excite cloth post wait label snow family humble gas toilet fit blur lecture connect end turn walnut craft"
+
+	path := _btcAddrTypePath[s.addrType]
+	pubKey, _, err := cryptolib.MnemonicToBtcEcKey(mnemonic, path)
+	if err != nil {
+		return "", "", err
+	}
+
+	serializedKey := pubKey.SerializeCompressed()
+	pubKeyAddr, err := btcutil.NewAddressPubKey(serializedKey, s.netParams)
+	if err != nil {
+		return "", "", err
+	}
+	addr := pubKeyAddr.AddressPubKeyHash()
+
+	return addr.EncodeAddress(), mnemonic, nil
 }

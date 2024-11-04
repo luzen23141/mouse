@@ -11,6 +11,7 @@ var ChainMap = map[string]ChainInterface{
 	SuiChain:     chain.NewSuiChain(),
 	InjChain:     chain.NewInjChain(),
 	SolChain:     chain.NewSolChain(),
+	TonChain:     chain.NewTonChain(),
 }
 
 type ChainInterface interface {
