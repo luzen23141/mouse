@@ -1,8 +1,8 @@
 package blockchain
 
 import (
-	"mouse/pkg/blockchain/_const"
-	"mouse/pkg/blockchain/model"
+	"github.com/luzen23141/mouse/pkg/blockchain/_const"
+	"github.com/luzen23141/mouse/pkg/blockchain/model"
 )
 
 var CurMap = map[string]model.Currency{

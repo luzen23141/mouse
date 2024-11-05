@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"mouse/pkg"
+	"github.com/luzen23141/mouse/pkg"
 	"os"
 
 	"github.com/spf13/cobra"

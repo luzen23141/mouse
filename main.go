@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"mouse/cmd"
-	"mouse/pkg/helper"
-	"mouse/pkg/lib/env"
-	"mouse/pkg/lib/log"
+	"github.com/luzen23141/mouse/cmd"
+	"github.com/luzen23141/mouse/pkg/helper"
+	"github.com/luzen23141/mouse/pkg/lib/env"
+	"github.com/luzen23141/mouse/pkg/lib/log"
 )
 
 func main() {

@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"mouse/pkg"
-	"mouse/pkg/controller"
-	"mouse/pkg/helper"
+	"github.com/luzen23141/mouse/pkg"
+	"github.com/luzen23141/mouse/pkg/controller"
+	"github.com/luzen23141/mouse/pkg/helper"
 
 	"github.com/gin-gonic/gin"
 )

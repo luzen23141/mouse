@@ -3,7 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"mouse/pkg/blockchain"
+	"github.com/luzen23141/mouse/pkg/blockchain"
 	"strings"
 	"time"
 

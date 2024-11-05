@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"mouse/pkg/blockchain"
-	"mouse/pkg/helper"
-	"mouse/pkg/model/modelapi"
+	"github.com/luzen23141/mouse/pkg/blockchain"
+	"github.com/luzen23141/mouse/pkg/helper"
+	"github.com/luzen23141/mouse/pkg/model/modelapi"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/exp/maps"

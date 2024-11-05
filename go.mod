@@ -1,4 +1,4 @@
-module mouse
+module github.com/luzen23141/mouse
 
 go 1.23.2
 

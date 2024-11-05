@@ -1,6 +1,6 @@
 package blockchain
 
-import "mouse/pkg/blockchain/model"
+import "github.com/luzen23141/mouse/pkg/blockchain/model"
 
 var (
 	BtcCfg = model.BtcCfg{

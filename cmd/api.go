@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"mouse/pkg"
-	"mouse/pkg/helper"
-	"mouse/pkg/lib/log"
-	"mouse/pkg/lib/validate"
-	"mouse/pkg/middleware"
-	"mouse/pkg/routes"
+	"github.com/luzen23141/mouse/pkg"
+	"github.com/luzen23141/mouse/pkg/helper"
+	"github.com/luzen23141/mouse/pkg/lib/log"
+	"github.com/luzen23141/mouse/pkg/lib/validate"
+	"github.com/luzen23141/mouse/pkg/middleware"
+	"github.com/luzen23141/mouse/pkg/routes"
 	"net/http"
 	"strconv"
 
