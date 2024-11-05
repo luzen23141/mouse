@@ -2,6 +2,9 @@ package chain
 
 import (
 	"fmt"
+	"math/big"
+	"strings"
+
 	"github.com/btcsuite/btcd/btcec/v2"
 	"github.com/btcsuite/btcd/btcutil"
 	"github.com/btcsuite/btcd/chaincfg"
@@ -11,8 +14,6 @@ import (
 	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
 	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
-	"math/big"
-	"strings"
 )
 
 type BtcChain struct {
@@ -69,7 +70,7 @@ func (s *BtcChain) GenHdAddr() (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	//mnemonic := "outside harbor seed crumble ginger broccoli excite cloth post wait label snow family humble gas toilet fit blur lecture connect end turn walnut craft"
+	// mnemonic := "outside harbor seed crumble ginger broccoli excite cloth post wait label snow family humble gas toilet fit blur lecture connect end turn walnut craft"
 
 	path := _btcAddrTypePath[s.addrType]
 	pubKey, _, err := cryptolib.MnemonicToBtcEcKey(mnemonic, path)

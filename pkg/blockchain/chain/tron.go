@@ -5,12 +5,13 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"math/big"
+
 	"github.com/fbsobreira/gotron-sdk/pkg/client"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
-	"github.com/luzen23141/mouse/pkg/lib/cyptolib"
+	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
 	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
-	"math/big"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -49,7 +50,6 @@ func (s *TronChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *TronChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-
 	conn, err := s.getClient()
 	if err != nil {
 		return decimal.Zero, err

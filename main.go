@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/luzen23141/mouse/cmd"
 	"github.com/luzen23141/mouse/pkg/helper"
 	"github.com/luzen23141/mouse/pkg/lib/env"

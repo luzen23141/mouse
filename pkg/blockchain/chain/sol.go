@@ -2,8 +2,9 @@ package chain
 
 import (
 	"crypto/ed25519"
+
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
-	"github.com/luzen23141/mouse/pkg/lib/cyptolib"
+	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
 	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
 

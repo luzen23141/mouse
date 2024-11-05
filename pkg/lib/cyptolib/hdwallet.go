@@ -3,6 +3,7 @@ package cryptolib
 import (
 	"crypto/ecdsa"
 	"errors"
+
 	"github.com/btcsuite/btcd/btcec/v2"
 
 	"github.com/btcsuite/btcd/btcutil/hdkeychain"

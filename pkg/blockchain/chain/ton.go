@@ -2,6 +2,7 @@ package chain
 
 import (
 	"crypto/ed25519"
+
 	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"

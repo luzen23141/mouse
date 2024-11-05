@@ -3,11 +3,12 @@ package cmd
 import (
 	"errors"
 	"fmt"
+	"sort"
+
 	"github.com/luzen23141/mouse/pkg/blockchain"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/maps"
-	"sort"
 )
 
 // getBalanceCmd represents the serve command
