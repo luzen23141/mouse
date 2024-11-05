@@ -1,4 +1,4 @@
-package blockchain
+package _const
 
 const (
 	BTC    = "btc"

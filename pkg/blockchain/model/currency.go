@@ -9,6 +9,7 @@ type Currency struct {
 }
 
 type CurrencyContract struct {
+	Chain   string
 	Addr    string
 	Name    string
 	Decimal int32

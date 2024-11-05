@@ -12,17 +12,30 @@ import (
 	"math/big"
 	"mouse/pkg/blockchain/model"
 	cryptolib "mouse/pkg/lib/cyptolib"
+	"strings"
 )
 
 type BtcChain struct {
 	netParams *chaincfg.Params
 	addrType  string
+	cfg       model.BtcCfg
 }
 
-func NewBtcChain() *BtcChain {
+func NewBtcChain(cfg model.BtcCfg) *BtcChain {
+	cfg.Url = strings.TrimSuffix(cfg.Url, "/")
+
+	if cfg.IsTest {
+		return &BtcChain{
+			netParams: &chaincfg.TestNet3Params,
+			addrType:  _btcAddrLegacy,
+			cfg:       cfg,
+		}
+	}
+
 	return &BtcChain{
 		netParams: &chaincfg.MainNetParams,
 		addrType:  _btcAddrLegacy,
+		cfg:       cfg,
 	}
 }
 
@@ -73,7 +86,7 @@ func (s *BtcChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *BtcChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	url := fmt.Sprintf("https://api.blockcypher.com/v1/btc/main/addrs/%s/balance", addr)
+	url := fmt.Sprintf("%s/v1/btc/main/addrs/%s/balance", s.cfg.Url, addr)
 	resp, err := resty.New().R().Get(url)
 	if err != nil {
 		return decimal.Zero, err

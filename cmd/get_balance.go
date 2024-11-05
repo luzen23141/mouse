@@ -45,7 +45,7 @@ func getBalanceExec(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	chainSer, ok := blockchain.ChainMap[args[1]]
+	chainSer, ok := blockchain.ChainMap[curChainCfg.Chain]
 	if !ok {
 		return errors.New("%s 鏈未支援")
 	}
