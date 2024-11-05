@@ -1,8 +1,12 @@
 package chain
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
 	"mouse/pkg/blockchain/model"
@@ -52,5 +56,42 @@ func (s *EvmChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *EvmChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	return decimal.Zero, eris.New("not support")
+	if cur.IsGov {
+		conn, err := s.getClient()
+		if err != nil {
+			return decimal.Zero, eris.Wrap(err, "failed to connect ethclient")
+		}
+
+		// Get the balance of an account
+		account := common.HexToAddress(addr)
+		balance, err := conn.BalanceAt(context.Background(), account, nil)
+		if err != nil {
+			return decimal.Zero, eris.Wrap(err, "failed to get balance")
+		}
+
+		return decimal.NewFromBigInt(balance, cur.Decimal), nil
+	}
+
+	conn, err := s.getClient()
+	if err != nil {
+		return decimal.Zero, eris.Wrap(err, "failed to connect ethclient")
+	}
+
+	// 建立 USDT 合約實例
+	contractModel, err := NewEip20(common.HexToAddress(cur.Addr), conn)
+	if err != nil {
+		return decimal.Zero, eris.Wrap(err, "failed to create contract model")
+	}
+
+	// 呼叫 balanceOf 函數獲取餘額
+	balance, err := contractModel.BalanceOf(&bind.CallOpts{}, common.HexToAddress(addr))
+	if err != nil {
+		return decimal.Zero, eris.Wrap(err, "failed to call balanceOf")
+	}
+
+	return decimal.NewFromBigInt(balance, cur.Decimal), nil
+}
+
+func (*EvmChain) getClient() (*ethclient.Client, error) {
+	return ethclient.Dial("https://ethereum-rpc.publicnode.com")
 }
