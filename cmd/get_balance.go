@@ -32,6 +32,8 @@ func getBalanceCmdInit(cmd *cobra.Command) {
 }
 
 func getBalanceExec(cmd *cobra.Command, args []string) error {
+	cmd.SilenceUsage = true // 是否要打印指令的說明，如果是參數帶錯才要，如果是運行錯誤的不要
+
 	var curChainCfg model.CurrencyContract
 	if curCfg, ok := blockchain.CurMap[args[0]]; !ok {
 		curList := maps.Values(blockchain.CurMap)

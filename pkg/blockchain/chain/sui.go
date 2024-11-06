@@ -1,8 +1,14 @@
 package chain
 
 import (
+	"context"
 	"crypto/ed25519"
 	"encoding/hex"
+	"github.com/block-vision/sui-go-sdk/constant"
+	"github.com/block-vision/sui-go-sdk/models"
+	"github.com/block-vision/sui-go-sdk/sui"
+	"math/big"
+	"strconv"
 
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
@@ -54,5 +60,26 @@ func (s *SuiChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *SuiChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	return decimal.Zero, eris.New("not support")
+	conn, err := s.getClient()
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	rsp, err := conn.SuiXGetBalance(context.Background(), models.SuiXGetBalanceRequest{
+		Owner:    addr,
+		CoinType: cur.Addr,
+	})
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	balanceInt, err := strconv.Atoi(rsp.TotalBalance)
+	if err != nil {
+		return decimal.Zero, err
+	}
+	return decimal.NewFromBigInt(big.NewInt(int64(balanceInt)), cur.Decimal), nil
+}
+
+func (*SuiChain) getClient() (sui.ISuiAPI, error) {
+	return sui.NewSuiClient(constant.SuiMainnetEndpoint), nil
 }
