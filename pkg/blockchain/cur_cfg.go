@@ -77,6 +77,13 @@ var CurMap = map[string]model.Currency{
 				Decimal: -6,
 				IsGov:   false,
 			},
+			"inj": {
+				Chain:   _const.InjChain,
+				Addr:    "peggy0xdAC17F958D2ee523a2206206994597C13D831ec7",
+				Name:    "Tether",
+				Decimal: -6,
+				IsGov:   false,
+			},
 		},
 	},
 	_const.TRX: {
@@ -135,6 +142,21 @@ var CurMap = map[string]model.Currency{
 				Addr:    "",
 				Name:    "TON",
 				Decimal: -9,
+				IsGov:   true,
+			},
+		},
+	},
+	_const.INJ: {
+		Name:   "Injective",
+		Symbol: "INJ",
+		Remark: "Injective",
+		Sort:   8,
+		Chain: map[string]model.CurrencyContract{
+			_const.InjChain: {
+				Chain:   _const.InjChain,
+				Addr:    "inj",
+				Name:    "Injective",
+				Decimal: -18,
 				IsGov:   true,
 			},
 		},

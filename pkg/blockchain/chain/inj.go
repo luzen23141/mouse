@@ -1,16 +1,18 @@
 package chain
 
 import (
+	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
-
+	"fmt"
+	"github.com/InjectiveLabs/sdk-go/client/common"
+	exchangeclient "github.com/InjectiveLabs/sdk-go/client/exchange"
+	"github.com/btcsuite/btcd/btcutil/bech32"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
 	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
-
-	"github.com/btcsuite/btcd/btcutil/bech32"
-	"github.com/ethereum/go-ethereum/crypto"
 )
 
 type InjChain struct{}
@@ -68,5 +70,36 @@ func (s *InjChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *InjChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	return decimal.Zero, eris.New("not support")
+
+	network := common.LoadNetwork("mainnet", "lb")
+	exchangeClient, err := exchangeclient.NewExchangeClient(network)
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	res, err := exchangeClient.GetAccountPortfolioBalances(context.Background(), addr)
+	if err != nil {
+		fmt.Println(err)
+	}
+	if res.GetPortfolio().AccountAddress != addr { // 檢查資料有沒有成功取回來
+		return decimal.Zero, eris.New("not support")
+	}
+
+	allBalances := res.GetPortfolio().GetBankBalances()
+	if len(allBalances) == 0 {
+		return decimal.Zero, nil
+	}
+
+	for _, v := range allBalances {
+		if v.GetDenom() == cur.Addr {
+
+			balance, err := decimal.NewFromString(v.GetAmount())
+			if err != nil {
+				return decimal.Zero, err
+			}
+			return balance.Mul(decimal.New(1, cur.Decimal)), nil
+		}
+	}
+
+	return decimal.Zero, err
 }
