@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
-	"fmt"
 	"github.com/InjectiveLabs/sdk-go/client/common"
 	exchangeclient "github.com/InjectiveLabs/sdk-go/client/exchange"
 	"github.com/btcsuite/btcd/btcutil/bech32"
@@ -79,7 +78,7 @@ func (s *InjChain) GetAddrBalance(addr string, cur model.CurrencyContract) (deci
 
 	res, err := exchangeClient.GetAccountPortfolioBalances(context.Background(), addr)
 	if err != nil {
-		fmt.Println(err)
+		return decimal.Zero, err
 	}
 	if res.GetPortfolio().AccountAddress != addr { // 檢查資料有沒有成功取回來
 		return decimal.Zero, eris.New("not support")
