@@ -1,11 +1,14 @@
 package chain
 
 import (
+	"context"
 	"crypto/ed25519"
+	"github.com/blocto/solana-go-sdk/client"
+	"github.com/blocto/solana-go-sdk/rpc"
+	"math/big"
 
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
-	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
 
 	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
@@ -52,5 +55,31 @@ func (s *SolChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *SolChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	return decimal.Zero, eris.New("not support")
+	conn, err := s.getClient()
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	if cur.IsGov {
+		// get balance
+		balance, err := conn.GetBalance(context.TODO(), addr)
+		if err != nil {
+			return decimal.Zero, err
+		}
+		return decimal.NewFromBigInt(big.NewInt(int64(balance)), cur.Decimal), nil
+	}
+
+	tokenAccs, err := conn.GetTokenAccountsByOwnerByMint(context.TODO(), addr, cur.Addr)
+	if err != nil {
+		return decimal.Zero, err
+	}
+	balance := uint64(0)
+	for _, v := range tokenAccs {
+		balance += v.Amount
+	}
+	return decimal.NewFromBigInt(big.NewInt(int64(balance)), cur.Decimal), nil
+}
+
+func (s *SolChain) getClient() (*client.Client, error) {
+	return client.NewClient(rpc.MainnetRPCEndpoint), nil
 }

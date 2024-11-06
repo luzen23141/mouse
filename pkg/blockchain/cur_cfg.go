@@ -56,6 +56,13 @@ var CurMap = map[string]model.Currency{
 				Decimal: -6,
 				IsGov:   false,
 			},
+			"sol": {
+				Chain:   _const.SolChain,
+				Addr:    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+				Name:    "Tether",
+				Decimal: -6,
+				IsGov:   false,
+			},
 		},
 	},
 	_const.TRX: {
@@ -69,6 +76,21 @@ var CurMap = map[string]model.Currency{
 				Addr:    "",
 				Name:    "Tron",
 				Decimal: -6,
+				IsGov:   true,
+			},
+		},
+	},
+	_const.SOL: {
+		Name:   "Solana",
+		Symbol: "SOL",
+		Remark: "Solana",
+		Sort:   5,
+		Chain: map[string]model.CurrencyContract{
+			_const.SolChain: {
+				Chain:   _const.SolChain,
+				Addr:    "",
+				Name:    "Solana",
+				Decimal: -9,
 				IsGov:   true,
 			},
 		},
