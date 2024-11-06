@@ -1,15 +1,21 @@
 package chain
 
 import (
+	"context"
 	"crypto/ed25519"
-
+	"errors"
+	"github.com/block-vision/sui-go-sdk/utils"
 	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
-	"github.com/rotisserie/eris"
 	"github.com/shopspring/decimal"
 	"github.com/tyler-smith/go-bip39"
+	"github.com/xssnick/tonutils-go/address"
+	"github.com/xssnick/tonutils-go/liteclient"
+	"github.com/xssnick/tonutils-go/tlb"
+	"github.com/xssnick/tonutils-go/ton"
+	"github.com/xssnick/tonutils-go/ton/jetton"
 	"github.com/xssnick/tonutils-go/ton/wallet"
 )
 
@@ -97,6 +103,69 @@ func (s *TonChain) GenHdAddr() (string, string, error) {
 	return address.Bounce(false).String(), mnemonic, nil
 }
 
-func (s *TonChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	return decimal.Zero, eris.New("not support")
+func (s *TonChain) GetAddrBalance(addrStr string, cur model.CurrencyContract) (decimal.Decimal, error) {
+
+	conn, ctx, err := s.getClient()
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	if cur.IsGov {
+
+		// we need fresh block info to run get methods
+		b, err := conn.CurrentMasterchainInfo(ctx)
+		if err != nil {
+			return decimal.Zero, err
+		}
+
+		// we use WaitForBlock to make sure block is ready,
+		// it is optional but escapes us from liteserver block not ready errors
+		addr := address.MustParseAddr(addrStr)
+		res, err := conn.WaitForBlock(b.SeqNo).GetAccount(ctx, b, addr)
+		if err != nil {
+			return decimal.Zero, err
+		}
+		utils.PrettyPrint(res)
+
+		if !res.IsActive {
+			return decimal.Zero, errors.New("account not active")
+		}
+		if res.State.Status != tlb.AccountStatusActive {
+			return decimal.Zero, errors.New("account not active, active:" + string(res.State.Status))
+		}
+
+		return decimal.NewFromBigInt(res.State.Balance.Nano(), cur.Decimal), nil
+	}
+
+	// jetton contract address
+	contract := address.MustParseAddr(cur.Addr)
+	master := jetton.NewJettonMasterClient(conn, contract)
+
+	// get jetton wallet for account
+	ownerAddr := address.MustParseAddr(addrStr)
+	jettonWallet, err := master.GetJettonWallet(context.Background(), ownerAddr)
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	jettonBalance, err := jettonWallet.GetBalance(context.Background())
+	if err != nil {
+		return decimal.Zero, err
+	}
+
+	return decimal.NewFromBigInt(jettonBalance, cur.Decimal), nil
+}
+
+func (*TonChain) getClient() (ton.APIClientWrapped, context.Context, error) {
+	client := liteclient.NewConnectionPool()
+
+	// connect to mainnet lite servers
+	err := client.AddConnectionsFromConfigUrl(context.Background(), "https://ton.org/global.config.json")
+	if err != nil {
+		return nil, nil, err
+	}
+
+	// initialize ton api lite connection wrapper
+	ctx := client.StickyContext(context.Background())
+	return ton.NewAPIClient(client, ton.ProofCheckPolicyFast).WithRetry(), ctx, nil
 }

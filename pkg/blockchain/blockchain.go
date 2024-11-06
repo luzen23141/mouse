@@ -19,7 +19,7 @@ var ChainMap = map[string]ChainInterface{
 	_const.SuiChain:     chain.NewSuiChain(),
 	_const.InjChain:     chain.NewInjChain(), // 差取餘額
 	_const.SolChain:     chain.NewSolChain(),
-	_const.TonChain:     chain.NewTonChain(), // 差取餘額
+	_const.TonChain:     chain.NewTonChain(),
 }
 
 type ChainInterface interface {

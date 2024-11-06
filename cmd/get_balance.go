@@ -3,8 +3,6 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"sort"
-
 	"github.com/luzen23141/mouse/pkg/blockchain"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	"github.com/spf13/cobra"
@@ -36,10 +34,7 @@ func getBalanceExec(cmd *cobra.Command, args []string) error {
 
 	var curChainCfg model.CurrencyContract
 	if curCfg, ok := blockchain.CurMap[args[0]]; !ok {
-		curList := maps.Values(blockchain.CurMap)
-		sort.Slice(curList, func(i, j int) bool {
-			return curList[i].Sort < curList[j].Sort
-		})
+		curList := maps.Keys(blockchain.CurMap)
 		curList = curList[0:min(10, len(curList))]
 		return fmt.Errorf("invalid argument %q for %q, valid args: %v ...etc", args[0], cmd.CommandPath(), curList)
 	} else {
