@@ -9,6 +9,8 @@ import (
 
 var ChainMap = map[string]ChainInterface{
 	_const.BtcChain:     chain.NewBtcChain(BtcCfg),
+	_const.BtcTestChain: chain.NewBtcChain(BtcTestCfg),
+
 	_const.TronChain:    chain.NewTronChain(),
 	_const.EthChain:     chain.NewEvmChain(),
 	_const.BscChain:     chain.NewEvmChain(),

@@ -19,6 +19,13 @@ var CurMap = map[string]model.Currency{
 				Decimal: -8,
 				IsGov:   true,
 			},
+			_const.BtcTestChain: {
+				Chain:   _const.BtcTestChain,
+				Addr:    "",
+				Name:    "Bitcoin TestNet3",
+				Decimal: -8,
+				IsGov:   true,
+			},
 		},
 	},
 	_const.ETH: {

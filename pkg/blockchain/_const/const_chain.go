@@ -7,6 +7,8 @@ const (
 	InjChain  = "inj"
 	TonChain  = "ton"
 	SolChain  = "sol"
+
+	BtcTestChain = "btc_test"
 )
 
 // evm的鏈

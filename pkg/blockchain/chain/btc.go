@@ -108,7 +108,7 @@ func (s *BtcChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
 }
 
 func (s *BtcChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	url := fmt.Sprintf("%s/v1/btc/main/addrs/%s/balance", s.cfg.URL, addr)
+	url := fmt.Sprintf("%s/addrs/%s/balance", s.cfg.URL, addr)
 	resp, err := resty.New().R().Get(url)
 	if err != nil {
 		return decimal.Zero, err
