@@ -23,7 +23,7 @@ type BtcChain struct {
 }
 
 func NewBtcChain(cfg model.BtcCfg) *BtcChain {
-	cfg.Url = strings.TrimSuffix(cfg.Url, "/")
+	cfg.URL = strings.TrimSuffix(cfg.URL, "/")
 
 	if cfg.IsTest {
 		return &BtcChain{
@@ -49,11 +49,11 @@ func (s *BtcChain) GenAddr() (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	//wifStr := "L4ekbXpema8Cv1sPFibE2fa2aLwUi1hhp1iLzVMt7EvNskxMu1Jz"
-	//wif, err := btcutil.DecodeWIF(wifStr)
-	//if err != nil {
+	// wifStr := "L4ekbXpema8Cv1sPFibE2fa2aLwUi1hhp1iLzVMt7EvNskxMu1Jz"
+	// wif, err := btcutil.DecodeWIF(wifStr)
+	// if err != nil {
 	//	return "", "", err
-	//}
+	// }
 	privKey := wif.PrivKey
 	pubKey := privKey.PubKey()
 
@@ -70,7 +70,6 @@ func (s *BtcChain) GenHdAddr() (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	// mnemonic := "outside harbor seed crumble ginger broccoli excite cloth post wait label snow family humble gas toilet fit blur lecture connect end turn walnut craft"
 
 	path := _btcAddrTypePath[s.addrType]
 	pubKey, _, err := cryptolib.MnemonicToBtcEcKey(mnemonic, path)
@@ -87,7 +86,7 @@ func (s *BtcChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *BtcChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-	url := fmt.Sprintf("%s/v1/btc/main/addrs/%s/balance", s.cfg.Url, addr)
+	url := fmt.Sprintf("%s/v1/btc/main/addrs/%s/balance", s.cfg.URL, addr)
 	resp, err := resty.New().R().Get(url)
 	if err != nil {
 		return decimal.Zero, err

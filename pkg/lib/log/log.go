@@ -69,11 +69,11 @@ func LogError(fileName string, err error, msgs ...string) {
 		msg, _ = sonic.MarshalString(msgs)
 	}
 	if fileName == FilePanic {
-		withLevel(zerolog.PanicLevel, 3, fileName, msg, FormatErrorToJson(err))
+		withLevel(zerolog.PanicLevel, 3, fileName, msg, FormatErrorToJSON(err))
 		return
 	}
 
-	withLevel(zerolog.ErrorLevel, 3, fileName, msg, FormatErrorToJson(err))
+	withLevel(zerolog.ErrorLevel, 3, fileName, msg, FormatErrorToJSON(err))
 }
 
 func LogErrorf(fileName string, err error, msg string, v ...interface{}) {
@@ -86,14 +86,14 @@ func LogErrorf(fileName string, err error, msg string, v ...interface{}) {
 	}
 	msg = fmt.Sprintf(msg, v...)
 	if fileName == FilePanic {
-		withLevel(zerolog.PanicLevel, 3, fileName, msg, FormatErrorToJson(err))
+		withLevel(zerolog.PanicLevel, 3, fileName, msg, FormatErrorToJSON(err))
 		return
 	}
 
-	withLevel(zerolog.ErrorLevel, 3, fileName, msg, FormatErrorToJson(err))
+	withLevel(zerolog.ErrorLevel, 3, fileName, msg, FormatErrorToJSON(err))
 }
 
-func FormatErrorToJson(err error) string {
+func FormatErrorToJSON(err error) string {
 	str, marshalErr := sonic.MarshalString(eris.ToCustomJSON(err, eris.NewDefaultJSONFormat(eris.FormatOptions{
 		InvertOutput: true, // Flag that inverts the error output (wrap errors shown first).
 		WithTrace:    true, // Flag that enables stack trace output.

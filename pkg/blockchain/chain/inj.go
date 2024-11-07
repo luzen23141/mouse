@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
+
 	"github.com/InjectiveLabs/sdk-go/client/common"
 	exchangeclient "github.com/InjectiveLabs/sdk-go/client/exchange"
 	"github.com/btcsuite/btcd/btcutil/bech32"
@@ -69,9 +70,7 @@ func (s *InjChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *InjChain) GetAddrBalance(addr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-
-	network := common.LoadNetwork("mainnet", "lb")
-	exchangeClient, err := exchangeclient.NewExchangeClient(network)
+	exchangeClient, err := s.getClient()
 	if err != nil {
 		return decimal.Zero, err
 	}
@@ -91,7 +90,6 @@ func (s *InjChain) GetAddrBalance(addr string, cur model.CurrencyContract) (deci
 
 	for _, v := range allBalances {
 		if v.GetDenom() == cur.Addr {
-
 			balance, err := decimal.NewFromString(v.GetAmount())
 			if err != nil {
 				return decimal.Zero, err
@@ -101,4 +99,13 @@ func (s *InjChain) GetAddrBalance(addr string, cur model.CurrencyContract) (deci
 	}
 
 	return decimal.Zero, err
+}
+
+func (s *InjChain) getClient() (exchangeclient.ExchangeClient, error) {
+	network := common.LoadNetwork("mainnet", "lb")
+	exchangeClient, err := exchangeclient.NewExchangeClient(network)
+	if err != nil {
+		return nil, err
+	}
+	return exchangeClient, nil
 }

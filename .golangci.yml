@@ -1,8 +1,8 @@
 issues:
   exclude-dirs:
     - tmp
-#  exclude-files:
-#    - pkg/blockchain/crypto_helper.go
+  #  exclude-files:
+  #    - pkg/blockchain/crypto_helper.go
   exclude-rules:
     - path: pkg/lib
       linters:
@@ -21,11 +21,29 @@ linters:
     - staticcheck # 预设 uber
     - unused # 预设
     - goimports # uber
+    - gofmt # 官方提供的程式碼格式化工具，確保程式碼風格一致性
+    - gocyclo # 檢查函式的圈複雜度，避免函式過於複雜難以理解和維護
+    - goconst # 找出重複的字串常數，建議將其定義為常數，提高程式碼可讀性和可維護性
+    - ineffassign # 檢查是否有無效的賦值操作，例如將值賦給一個從未使用的變數
+    - unconvert # 檢查是否有不必要的類型轉換
     - gofumpt # 同go fmt加强版
+    - gosec # 檢查程式碼中是否有安全漏洞，例如 SQL 注入、跨站腳本攻擊等
     - whitespace # 检查多馀的空格
     - bodyclose # 检查http连缐有没有关闭
     - perfsprint # 檢查 fmt.Sprintf 用法
     - sqlclosecheck # 檢查 sql 資料庫關閉
+    - misspell # 檢查程式碼中的拼寫錯誤
+    - prealloc # 檢查可以預先分配記憶體的 slice 和 map
+    - lll # 檢查程式碼中的行長度，避免過長的程式碼行
+    - bodyclose # 檢查http連缐有沒有關閉
+    - dogsled # 檢查程式碼中是否有冗餘的 nil 檢查
+    - gocognit # 檢查程式碼中的函式複雜度
+    - nilerr # 檢查程式碼中的 nil 檢查
+    - rowserrcheck # 檢查程式碼中是否有未檢查的錯誤，特別是 defer 語句中的錯誤
+    - sqlclosecheck # 檢查 SQL 資料庫關閉
+    - stylecheck # 檢查程式碼的風格
+    - typecheck # 檢查程式碼中的類型錯誤
+    - gocritic # 包含多個 linter，可以檢查程式碼中的效能問題、程式碼風格等
 #    - dupl # 重复程式码
 #    - unparam # 检查func传入及返回有没有没用到的
 linters-settings:

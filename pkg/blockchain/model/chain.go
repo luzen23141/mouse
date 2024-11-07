@@ -1,6 +1,6 @@
 package model
 
 type BtcCfg struct {
-	Url    string
+	URL    string
 	IsTest bool
 }

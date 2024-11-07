@@ -3,17 +3,15 @@ package chain
 import (
 	"context"
 	"crypto/ed25519"
-	"github.com/blocto/solana-go-sdk/client"
-	"github.com/blocto/solana-go-sdk/rpc"
-	"math/big"
 
+	"github.com/blocto/solana-go-sdk/client"
+	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
+	"github.com/blocto/solana-go-sdk/rpc"
+	"github.com/blocto/solana-go-sdk/types"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	cryptolib "github.com/luzen23141/mouse/pkg/lib/cyptolib"
-	"github.com/shopspring/decimal"
-
-	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
-	"github.com/blocto/solana-go-sdk/types"
 	"github.com/mr-tron/base58"
+	"github.com/shopspring/decimal"
 	"github.com/tyler-smith/go-bip39"
 )
 
@@ -66,7 +64,8 @@ func (s *SolChain) GetAddrBalance(addr string, cur model.CurrencyContract) (deci
 		if err != nil {
 			return decimal.Zero, err
 		}
-		return decimal.NewFromBigInt(big.NewInt(int64(balance)), cur.Decimal), nil
+
+		return decimal.NewFromUint64(balance).Mul(decimal.New(1, cur.Decimal)), nil
 	}
 
 	tokenAccs, err := conn.GetTokenAccountsByOwnerByMint(context.TODO(), addr, cur.Addr)
@@ -77,7 +76,7 @@ func (s *SolChain) GetAddrBalance(addr string, cur model.CurrencyContract) (deci
 	for _, v := range tokenAccs {
 		balance += v.Amount
 	}
-	return decimal.NewFromBigInt(big.NewInt(int64(balance)), cur.Decimal), nil
+	return decimal.NewFromUint64(balance).Mul(decimal.New(1, cur.Decimal)), nil
 }
 
 func (s *SolChain) getClient() (*client.Client, error) {

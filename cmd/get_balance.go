@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"fmt"
+
 	"github.com/luzen23141/mouse/pkg/blockchain"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
 	"github.com/spf13/cobra"
@@ -39,7 +40,8 @@ func getBalanceExec(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("invalid argument %q for %q, valid args: %v ...etc", args[0], cmd.CommandPath(), curList)
 	} else {
 		if curChainCfg, ok = curCfg.Chain[args[1]]; !ok {
-			return fmt.Errorf("invalid argument %q for %q, valid args: %v ...etc", args[1], cmd.CommandPath(), maps.Keys(curCfg.Chain))
+			msgF := "invalid argument %q for %q, valid args: %v ...etc"
+			return fmt.Errorf(msgF, args[1], cmd.CommandPath(), maps.Keys(curCfg.Chain))
 		}
 	}
 

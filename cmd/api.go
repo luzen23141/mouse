@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/luzen23141/mouse/pkg"
 	"github.com/luzen23141/mouse/pkg/helper"
@@ -22,10 +23,7 @@ var apiCmd = &cobra.Command{
 	Use:   "api",
 	Short: `api伺服器`,
 	Long:  `api伺服器`,
-	//Run: func(cmd *cobra.Command, args []string) {
-	//	fmt.Println("serve called")
-	//},
-	RunE: apiExec,
+	RunE:  apiExec,
 	// SilenceUsage: true,
 }
 
@@ -35,7 +33,9 @@ func apiCmdInit(cmd *cobra.Command) {
 
 func apiExec(cmd *cobra.Command, args []string) error {
 	fmt.Println("api server starting...")
-	log.InfoF(log.FileMainInfo, "api server starting..., GitVersion:%s,BuildDate:%s,GoVersion:%s", pkg.Version, pkg.BuildDate, pkg.GoVersion)
+	log.InfoF(log.FileMainInfo,
+		"api server starting..., GitVersion:%s,BuildDate:%s,GoVersion:%s",
+		pkg.Version, pkg.BuildDate, pkg.GoVersion)
 
 	ginMode := helper.EnvCfg.Gin.Debug
 	if ginMode {
@@ -53,8 +53,10 @@ func apiExec(cmd *cobra.Command, args []string) error {
 	// 運行 server
 	apiPort := helper.EnvCfg.Gin.Port
 	server := &http.Server{
-		Addr:    ":" + strconv.Itoa(apiPort),
-		Handler: g,
+		Addr:         ":" + strconv.Itoa(apiPort),
+		Handler:      g,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	// 启动服务器

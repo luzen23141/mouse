@@ -1,6 +1,6 @@
 module github.com/luzen23141/mouse
 
-go 1.23.2
+go 1.23.3
 
 require (
 	github.com/InjectiveLabs/sdk-go v1.53.0

@@ -76,11 +76,11 @@ func withLevel(level zerolog.Level, skip int, fileName, msg string, data ...inte
 	if len(data) == 1 && isString(data[0]) {
 		msg += " " + data[0].(string)
 	} else if len(data) > 0 {
-		rawJson, err := sonic.MarshalString(data)
+		rawJSON, err := sonic.MarshalString(data)
 		if err != nil {
 			fmt.Println(err)
 		}
-		msg += " " + rawJson
+		msg += " " + rawJSON
 	}
 	msg = getMsgPrefix(skip) + msg
 	getLogger(fileName).WithLevel(level).Msg(msg)

@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/ed25519"
 	"errors"
-	"github.com/block-vision/sui-go-sdk/utils"
+
 	"github.com/blocto/solana-go-sdk/pkg/hdwallet"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/luzen23141/mouse/pkg/blockchain/model"
@@ -104,14 +104,12 @@ func (s *TonChain) GenHdAddr() (string, string, error) {
 }
 
 func (s *TonChain) GetAddrBalance(addrStr string, cur model.CurrencyContract) (decimal.Decimal, error) {
-
 	conn, ctx, err := s.getClient()
 	if err != nil {
 		return decimal.Zero, err
 	}
 
 	if cur.IsGov {
-
 		// we need fresh block info to run get methods
 		b, err := conn.CurrentMasterchainInfo(ctx)
 		if err != nil {
@@ -125,7 +123,6 @@ func (s *TonChain) GetAddrBalance(addrStr string, cur model.CurrencyContract) (d
 		if err != nil {
 			return decimal.Zero, err
 		}
-		utils.PrettyPrint(res)
 
 		if !res.IsActive {
 			return decimal.Zero, errors.New("account not active")
@@ -138,8 +135,7 @@ func (s *TonChain) GetAddrBalance(addrStr string, cur model.CurrencyContract) (d
 	}
 
 	// jetton contract address
-	contract := address.MustParseAddr(cur.Addr)
-	master := jetton.NewJettonMasterClient(conn, contract)
+	master := jetton.NewJettonMasterClient(conn, address.MustParseAddr(cur.Addr))
 
 	// get jetton wallet for account
 	ownerAddr := address.MustParseAddr(addrStr)

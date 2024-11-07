@@ -1,9 +1,9 @@
 package cmd
 
 import (
-	"github.com/luzen23141/mouse/pkg"
 	"os"
 
+	"github.com/luzen23141/mouse/pkg"
 	"github.com/spf13/cobra"
 )
 
