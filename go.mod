@@ -227,4 +227,7 @@ require (
 	sigs.k8s.io/yaml v1.4.0 // indirect
 )
 
-replace github.com/bandprotocol/bandchain-packet => github.com/InjectiveLabs/bandchain-packet v0.0.4-inj-1
+replace (
+	github.com/bandprotocol/bandchain-packet => github.com/InjectiveLabs/bandchain-packet v0.0.4-inj-1
+	github.com/fbsobreira/gotron-sdk v0.0.0-20230907131216-1e824406fe8c => github.com/sunbankio/gotron-sdk v0.0.0-20231003155243-a269b0d040c3
+)

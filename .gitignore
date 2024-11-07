@@ -6,3 +6,4 @@ config.toml
 tmp
 mouse
 .aConfig
+bin
