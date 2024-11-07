@@ -42,12 +42,25 @@ func (*EvmChain) GenAddr() (string, string, error) {
 	return strings.ToLower(address.Hex()), hex.EncodeToString(privateKey.D.Bytes()), nil
 }
 
+func (s *EvmChain) GetAddrByPrivKey(privKeyStr string) (string, string, error) {
+	publicKey, privateKey, err := cryptolib.StrKeyToEcdsaKeyPair(privKeyStr)
+	if err != nil {
+		return "", "", err
+	}
+	address := crypto.PubkeyToAddress(*publicKey)
+	return strings.ToLower(address.Hex()), hex.EncodeToString(privateKey.D.Bytes()), nil
+}
+
 func (s *EvmChain) GenHdAddr() (string, string, error) {
 	mnemonic, _, err := cryptolib.NewMnemonic()
 	if err != nil {
 		return "", "", err
 	}
 
+	return s.GetAddrByMnemonic(mnemonic)
+}
+
+func (s *EvmChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
 	publicKeyECDSA, _, err := cryptolib.MnemonicToEcdsaPubKey(mnemonic, "m/44'/60'/0'/0/0")
 	if err != nil {
 		return "", "", err

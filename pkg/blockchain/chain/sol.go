@@ -32,6 +32,14 @@ func (s *SolChain) GenAddr() (string, string, error) {
 	return base58.Encode(pubKey), base58.Encode(privateKey), nil
 }
 
+func (s *SolChain) GetAddrByPrivKey(privKeyStr string) (string, string, error) {
+	publicKey, privateKey, err := cryptolib.StrKeyToEd25519KeyPair(privKeyStr)
+	if err != nil {
+		return "", "", err
+	}
+	return base58.Encode(publicKey), base58.Encode(privateKey), nil
+}
+
 // GenHdAddr 产生Hd wallet 地址，返回的key為mnemonic
 func (s *SolChain) GenHdAddr() (string, string, error) {
 	mnemonic, _, err := cryptolib.NewMnemonic()
@@ -39,6 +47,10 @@ func (s *SolChain) GenHdAddr() (string, string, error) {
 		return "", "", err
 	}
 
+	return s.GetAddrByMnemonic(mnemonic)
+}
+
+func (s *SolChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
 	derivedKey, err := hdwallet.Derived(`m/44'/501'/0'/0'`, bip39.NewSeed(mnemonic, ""))
 	if err != nil {
 		return "", "", err

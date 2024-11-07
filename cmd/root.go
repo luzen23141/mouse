@@ -24,7 +24,14 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	apiCmdInit(rootCmd)
 	genAddrCmdInit(rootCmd)
+
+	rootCmd.AddGroup(&cobra.Group{
+		ID:    "get",
+		Title: "Get Commands:",
+	})
+	getCmdInit(rootCmd)
 	getBalanceCmdInit(rootCmd)
+	getAddressCmdInit(rootCmd)
 
 	rootCmd.SetVersionTemplate(`{{printf "%s，%s\n" .Long .Version}}`)
 

@@ -67,8 +67,21 @@ func (s *TonChain) GenAddr() (string, string, error) {
 		return "", "", err
 	}
 
-	addrConfig := _tonAddrConfigMap["default"]
-	address, err := wallet.AddressFromPubKey(pubKey, addrConfig.versionCfg, addrConfig.subWallet)
+	address, err := wallet.AddressFromPubKey(pubKey, s.tonVersion.versionCfg, s.tonVersion.subWallet)
+	if err != nil {
+		return "", "", err
+	}
+
+	// Bounce(false) => UQ 開頭，Bounce(true) => EQ 開頭
+	return address.Bounce(false).String(), hexutil.Encode(privateKey.Seed()), nil
+}
+
+func (s *TonChain) GetAddrByPrivKey(privKeyStr string) (string, string, error) {
+	pubKey, privateKey, err := cryptolib.StrKeyToEd25519KeyPair(privKeyStr)
+	if err != nil {
+		return "", "", err
+	}
+	address, err := wallet.AddressFromPubKey(pubKey, s.tonVersion.versionCfg, s.tonVersion.subWallet)
 	if err != nil {
 		return "", "", err
 	}
@@ -85,8 +98,11 @@ func (s *TonChain) GenHdAddr() (string, string, error) {
 		return "", "", err
 	}
 
-	addrConfig := _tonAddrConfigMap["v5"]
-	derivedKey, err := hdwallet.Derived(addrConfig.path, bip39.NewSeed(mnemonic, ""))
+	return s.GetAddrByMnemonic(mnemonic)
+}
+
+func (s *TonChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
+	derivedKey, err := hdwallet.Derived(s.tonVersion.path, bip39.NewSeed(mnemonic, ""))
 	if err != nil {
 		return "", "", err
 	}
@@ -94,7 +110,7 @@ func (s *TonChain) GenHdAddr() (string, string, error) {
 	priKey := ed25519.NewKeyFromSeed(derivedKey.PrivateKey)
 	pubKey := priKey.Public().(ed25519.PublicKey)
 
-	address, err := wallet.AddressFromPubKey(pubKey, addrConfig.versionCfg, addrConfig.subWallet)
+	address, err := wallet.AddressFromPubKey(pubKey, s.tonVersion.versionCfg, s.tonVersion.subWallet)
 	if err != nil {
 		return "", "", err
 	}

@@ -48,6 +48,21 @@ func (s *InjChain) GenAddr() (string, string, error) {
 	return address, hex.EncodeToString(privateKey.D.Bytes()), nil
 }
 
+func (s *InjChain) GetAddrByPrivKey(privKeyStr string) (string, string, error) {
+	publicKey, privateKey, err := cryptolib.StrKeyToEcdsaKeyPair(privKeyStr)
+	if err != nil {
+		return "", "", err
+	}
+
+	ethAddress := crypto.PubkeyToAddress(*publicKey)
+	address, err := bech32.EncodeFromBase256("inj", ethAddress.Bytes())
+	if err != nil {
+		panic(err)
+	}
+
+	return address, hex.EncodeToString(privateKey.D.Bytes()), nil
+}
+
 // GenHdAddr 产生Hd wallet 地址，返回的key為mnemonic
 func (s *InjChain) GenHdAddr() (string, string, error) {
 	mnemonic, _, err := cryptolib.NewMnemonic()
@@ -55,6 +70,10 @@ func (s *InjChain) GenHdAddr() (string, string, error) {
 		return "", "", err
 	}
 
+	return s.GetAddrByMnemonic(mnemonic)
+}
+
+func (s *InjChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
 	publicKeyECDSA, _, err := cryptolib.MnemonicToEcdsaPubKey(mnemonic, "m/44'/60'/0'/0/0")
 	if err != nil {
 		return "", "", err

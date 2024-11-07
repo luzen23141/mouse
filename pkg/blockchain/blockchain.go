@@ -24,6 +24,8 @@ var ChainMap = map[string]ChainInterface{
 
 type ChainInterface interface {
 	GenAddr() (string, string, error)
+	GetAddrByPrivKey(string) (string, string, error)
 	GenHdAddr() (string, string, error)
+	GetAddrByMnemonic(string) (string, string, error)
 	GetAddrBalance(string, model.CurrencyContract) (decimal.Decimal, error)
 }

@@ -12,16 +12,17 @@ import (
 
 // getBalanceCmd represents the serve command
 var getBalanceCmd = &cobra.Command{
-	Use:   `get:balance`,
-	Short: `獲取餘額`,
-	Long:  `獲取餘額`,
-	RunE:  getBalanceExec,
+	Use:     `get:balance {currency} {chain} {addr}`,
+	Aliases: []string{"gb", "get:b", "g:balance"},
+	Short:   `獲取餘額`,
+	Long:    `獲取餘額`,
+	GroupID: `get`,
+	RunE:    getBalanceExec,
 	Args: func(cmd *cobra.Command, args []string) error {
 		needArgs := 3
 		if len(args) != needArgs {
 			return fmt.Errorf("accepts %d arg(s), received %d", needArgs, len(args))
 		}
-
 		return nil
 	},
 }

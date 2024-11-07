@@ -42,6 +42,19 @@ func (s *SuiChain) GenAddr() (string, string, error) {
 	return addr, hexutil.Encode(privateKey.Seed()), nil
 }
 
+func (s *SuiChain) GetAddrByPrivKey(privKeyStr string) (string, string, error) {
+	pubKey, privateKey, err := cryptolib.StrKeyToEd25519KeyPair(privKeyStr)
+	if err != nil {
+		return "", "", err
+	}
+	tmp := []byte{byte(keypair.Ed25519Flag)}
+	tmp = append(tmp, pubKey...)
+	addrBytes := blake2b.Sum256(tmp)
+	addr := "0x" + hex.EncodeToString(addrBytes[:])[:signer.AddressLength]
+
+	return addr, hexutil.Encode(privateKey.Seed()), nil
+}
+
 // GenHdAddr 产生Hd wallet 地址，返回的key為mnemonic
 func (s *SuiChain) GenHdAddr() (string, string, error) {
 	// 生成新的密钥对
@@ -50,6 +63,10 @@ func (s *SuiChain) GenHdAddr() (string, string, error) {
 		return "", "", err
 	}
 
+	return s.GetAddrByMnemonic(mnemonic)
+}
+
+func (s *SuiChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
 	suiSigner, err := signer.NewSignertWithMnemonic(mnemonic)
 	if err != nil {
 		return "", "", eris.Wrap(err, "failed to generate signer")

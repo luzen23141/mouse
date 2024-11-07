@@ -35,12 +35,24 @@ func (s *TronChain) GenAddr() (string, string, error) {
 	return s.pubKeyToAddr(*publicKeyECDSA), hexutil.Encode(privateKeyBytes)[2:], nil
 }
 
+func (s *TronChain) GetAddrByPrivKey(privKeyStr string) (string, string, error) {
+	publicKey, privateKey, err := cryptolib.StrKeyToEcdsaKeyPair(privKeyStr)
+	if err != nil {
+		return "", "", err
+	}
+	return s.pubKeyToAddr(*publicKey), hexutil.Encode(crypto.FromECDSA(privateKey))[2:], nil
+}
+
 func (s *TronChain) GenHdAddr() (string, string, error) {
 	mnemonic, _, err := cryptolib.NewMnemonic()
 	if err != nil {
 		return "", "", err
 	}
 
+	return s.GetAddrByMnemonic(mnemonic)
+}
+
+func (s *TronChain) GetAddrByMnemonic(mnemonic string) (string, string, error) {
 	publicKeyECDSA, _, err := cryptolib.MnemonicToEcdsaPubKey(mnemonic, "m/44'/195'/0'/0/0")
 	if err != nil {
 		return "", "", err

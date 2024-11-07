@@ -14,14 +14,17 @@ import (
 
 // apiCmd represents the serve command
 var genAddrCmd = &cobra.Command{
-	Use:   `gen`,
+	Use:   `gen {chain} [suffix]`,
 	Short: `產地址`,
 	Long:  `產地址`,
 	RunE:  genAddrExec,
 	Args:  genAddrValidArgs,
 }
 
-var _genAddrUsePriv = false
+var (
+	_genAddrUsePriv = false
+	_printCount     = int64(100000)
+)
 
 func genAddrValidArgs(cmd *cobra.Command, args []string) error {
 	if len(args) < 1 || len(args) > 2 {
@@ -39,10 +42,13 @@ func genAddrValidArgs(cmd *cobra.Command, args []string) error {
 func genAddrCmdInit(cmd *cobra.Command) {
 	genAddrCmd.Flags().Uint8P("concurrent", "c", 1, "併發執行數量")
 	genAddrCmd.Flags().BoolVar(&_genAddrUsePriv, "priv", false, "返回私鑰，預設為返回為助記詞")
+	genAddrCmd.Flags().Int64Var(&_printCount, "print_count", 100000, "計算多少次後打印計算資訊")
 	cmd.AddCommand(genAddrCmd)
 }
 
 func genAddrExec(cmd *cobra.Command, args []string) error {
+	cmd.SilenceUsage = true // 是否要打印指令的說明，如果是參數帶錯才要，如果是運行錯誤的不要
+
 	chain := args[0] // 已驗證過數量
 	chainSer, ok := blockchain.ChainMap[chain]
 	if !ok {
@@ -82,11 +88,10 @@ func genAddrExec(cmd *cobra.Command, args []string) error {
 		go func() {
 			for {
 				times++
-				if times%100000 == 0 {
+				if times%_printCount == 0 {
 					nowTime := time.Now().Unix()
-					execTime := nowTime - startTime
-
-					fmt.Printf("times: %d，平均每秒執行次數: %d\n", times, times/execTime)
+					fmt.Printf("%s times: %d，平均每秒執行次數: %d\n",
+						time.Now().Format("2006-01-02 15:04:05"), times, times/(nowTime-startTime))
 				}
 
 				addr, mnemonic, err := genAddrFunc()
