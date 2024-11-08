@@ -22,8 +22,9 @@ var genAddrCmd = &cobra.Command{
 }
 
 var (
-	_genAddrUsePriv = false
-	_printCount     = int64(100000)
+	_genAddrUsePriv    = false
+	_genAddrPrintCount = int64(100000)
+	_genAddrSensitive  = false
 )
 
 func genAddrValidArgs(cmd *cobra.Command, args []string) error {
@@ -42,7 +43,8 @@ func genAddrValidArgs(cmd *cobra.Command, args []string) error {
 func genAddrCmdInit(cmd *cobra.Command) {
 	genAddrCmd.Flags().Uint8P("concurrent", "c", 1, "併發執行數量")
 	genAddrCmd.Flags().BoolVar(&_genAddrUsePriv, "priv", false, "返回私鑰，預設為返回為助記詞")
-	genAddrCmd.Flags().Int64Var(&_printCount, "print_count", 100000, "計算多少次後打印計算資訊")
+	genAddrCmd.Flags().BoolVar(&_genAddrSensitive, "sensitive", false, "是否大小寫敏感")
+	genAddrCmd.Flags().Int64Var(&_genAddrPrintCount, "print_count", 100000, "計算多少次後打印計算資訊")
 	cmd.AddCommand(genAddrCmd)
 }
 
@@ -73,7 +75,14 @@ func genAddrExec(cmd *cobra.Command, args []string) error {
 		fmt.Printf("account %s: %s\n\n", chain, addr)
 		return nil
 	}
-	postfix = strings.ToLower(postfix)
+	postfixs := strings.Split(postfix, ",")
+	if !_genAddrSensitive {
+		tmpPostfixs := make([]string, 0, len(postfixs))
+		for _, v := range postfixs {
+			tmpPostfixs = append(tmpPostfixs, strings.ToLower(v))
+		}
+		postfixs = tmpPostfixs
+	}
 
 	times := int64(0)
 	concurrentCount, _ := cmd.Flags().GetUint8("concurrent")
@@ -88,7 +97,7 @@ func genAddrExec(cmd *cobra.Command, args []string) error {
 		go func() {
 			for {
 				times++
-				if times%_printCount == 0 {
+				if times%_genAddrPrintCount == 0 {
 					nowTime := time.Now().Unix()
 					fmt.Printf("%s times: %d，平均每秒執行次數: %d\n",
 						time.Now().Format("2006-01-02 15:04:05"), times, times/(nowTime-startTime))
@@ -101,7 +110,19 @@ func genAddrExec(cmd *cobra.Command, args []string) error {
 				}
 
 				// 檢查addr postfix
-				if !strings.HasSuffix(strings.ToLower(addr), postfix) {
+				checkAddr := addr
+				if !_genAddrSensitive {
+					checkAddr = strings.ToLower(checkAddr)
+				}
+
+				hasPostfix := false
+				for _, v := range postfixs {
+					if strings.HasSuffix(checkAddr, v) {
+						hasPostfix = true
+						break
+					}
+				}
+				if !hasPostfix {
 					continue
 				}
 
